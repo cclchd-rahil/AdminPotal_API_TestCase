@@ -5,11 +5,16 @@ from utils.config import BASE_URL
 class BaseAPI:
     def __init__(self):
         self.base_url = BASE_URL
+        self.headers = {}
 
-    def get(self, endpoint, headers=None):
-        response = requests.get(f"{self.base_url}{endpoint}", headers=headers)
-        return response
+    def set_authorization_token(self, token):
+        # Set the authorization header with the token
+        self.headers['Authorization'] = f"Bearer {token}"
 
-    def post(self, endpoint, data=None, headers=None):
-        response = requests.post(f"{self.base_url}{endpoint}", json=data, headers=headers)
-        return response
+    def post(self, endpoint, data=None):
+        url = f"{self.base_url}{endpoint}"
+        return requests.post(url, json=data, headers=self.headers)
+
+    def get(self, endpoint, params=None):
+        url = f"{self.base_url}{endpoint}"
+        return requests.get(url, params=params, headers=self.headers)
